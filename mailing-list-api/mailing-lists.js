@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
   console.log("you are hitting mailing route!");
   res.status(200).json(moduleData);
 });
+
 //get lists
 app.get("/lists", (req, res) => {
   const listNames = Array.from(lists.keys());
@@ -26,33 +27,30 @@ app.get("/lists/:name", (req, res) => {
 });
 
 //put data
-//continue working ...
 app.put("/lists/:name", (req, res) => {
   const listName = req.params.name;
-  // Check if the request body contains 'members' data
   if (!req.body || !req.body.members) {
     return res.status(400).json({ error: "Invalid request body" });
   }
   const updatedMembers = req.body.members;
-  // Update the list in the 'lists' Map
   lists.set(listName, updatedMembers);
-  // Respond with a success message and the updated list details
   res.status(200).json({ name: listName, members: updatedMembers });
 });
 
-// GET endpoint to retrieve a list by name
-app.get("/lists/:name", (req, res) => {
-  const listName = req.params.name;
-  // Check if the list name exists in the 'lists' Map
-  if (!lists.has(listName)) {
-    return res.status(404).json({ error: "List not found" });
-  }
-  // Retrieve the list members from the 'lists' Map
-  const members = lists.get(listName);
-
-  // Respond with the list details
-  res.status(200).json({ name: listName, members });
+app.delete("/lists/:name", (req, res) => {
+  const params = req.params.name;
+  lists.delete(params);
 });
+
+// GET endpoint to retrieve a list by name
+// app.get("/lists/:name", (req, res) => {
+//   const listName = req.params.name;
+//   if (!lists.has(listName)) {
+//     return res.status(404).json({ error: "List not found" });
+//   }
+//   const members = lists.get(listName);
+//   res.status(200).json({ name: listName, members });
+// });
 // Edit message by ID
 // app.put("/messages/:id", (req, res) => {
 //   console.log("you are hitting dynamic edit server!");
